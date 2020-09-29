@@ -68,7 +68,7 @@ size_t ThreadPool::queueSize() const
   return queue_.size();
 }
 
-void ThreadPool::run(Task task)
+void ThreadPool::run(Task task) //  lgy : add task to ThreadPool 
 {
   if (threads_.empty())
   {
@@ -88,7 +88,7 @@ void ThreadPool::run(Task task)
   }
 }
 
-ThreadPool::Task ThreadPool::take()
+ThreadPool::Task ThreadPool::take() // lgy : thread get task from ThreadPool
 {
   MutexLockGuard lock(mutex_);
   // always use a while-loop, due to spurious wakeup

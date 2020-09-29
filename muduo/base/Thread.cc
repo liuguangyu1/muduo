@@ -184,7 +184,7 @@ void Thread::start()
   }
   else
   {
-    latch_.wait();
+    latch_.wait(); // lgy : 等待其它子线程执行结束
     assert(tid_ > 0);
   }
 }
