@@ -32,7 +32,7 @@ class ChatServer : noncopyable
   }
 
  private:
-  void onConnection(const TcpConnectionPtr& conn)
+  void onConnection(const TcpConnectionPtr& conn) //lgy : 包括了连接的创建与断开
   {
     LOG_INFO << conn->localAddress().toIpPort() << " -> "
              << conn->peerAddress().toIpPort() << " is "

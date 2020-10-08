@@ -38,6 +38,7 @@ class LengthHeaderCodec : muduo::noncopyable
       {
         buf->retrieve(kHeaderLen);
         muduo::string message(buf->peek(), len);
+        //lgy: 编解码中获得完整的消息了，再执行server对应的处理message的响应函数
         messageCallback_(conn, message, receiveTime);
         buf->retrieve(len);
       }

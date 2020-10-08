@@ -80,8 +80,12 @@ class Buffer : public muduo::copyable
   const char* findCRLF() const
   {
     // FIXME: replace with memmem()?
+    //lgy change
+    return findCRLF(peek());
+    /*
     const char* crlf = std::search(peek(), beginWrite(), kCRLF, kCRLF+2);
     return crlf == beginWrite() ? NULL : crlf;
+    */
   }
 
   const char* findCRLF(const char* start) const
@@ -95,8 +99,12 @@ class Buffer : public muduo::copyable
 
   const char* findEOL() const
   {
+    //lgy change
+    return findEOL(peek());
+    /*
     const void* eol = memchr(peek(), '\n', readableBytes());
     return static_cast<const char*>(eol);
+    */
   }
 
   const char* findEOL(const char* start) const
@@ -152,6 +160,7 @@ class Buffer : public muduo::copyable
 
   void retrieveAll()
   {
+    //readerIndex_和writerIndex_复位
     readerIndex_ = kCheapPrepend;
     writerIndex_ = kCheapPrepend;
   }
@@ -181,6 +190,7 @@ class Buffer : public muduo::copyable
 
   void append(const char* /*restrict*/ data, size_t len)
   {
+    //调用std::copy前必须确保有足够空间
     ensureWritableBytes(len);
     std::copy(data, data+len, beginWrite());
     hasWritten(len);
@@ -363,9 +373,9 @@ class Buffer : public muduo::copyable
   {
     // FIXME: use vector::shrink_to_fit() in C++ 11 if possible.
     Buffer other;
-    other.ensureWritableBytes(readableBytes()+reserve);
-    other.append(toStringPiece());
-    swap(other);
+    other.ensureWritableBytes(this->readableBytes()+reserve);
+    other.append(this->toStringPiece());
+    this->swap(other);
   }
 
   size_t internalCapacity() const
@@ -396,6 +406,7 @@ class Buffer : public muduo::copyable
     }
     else
     {
+      //内部腾挪
       // move readable data to the front, make space inside buffer
       assert(kCheapPrepend < readerIndex_);
       size_t readable = readableBytes();
